@@ -49,5 +49,19 @@ const gamesData = [
     },
 ];
 
-export { homeMenu, gamesData };
+const unsurData = [
+  {
+    title: "Jembatan Keledai",
+    icon: require('../assets/img/UNSUR/1.png'),
+    description: "Mempelajari materi kimia Atom & Unsur",
+    image: "",
+  },
+  {
+    title: "Tabel Periodik",
+    icon: require('../assets/img/UNSUR/2.png'),
+    description: "Mempelajari materi kimia Atom & Unsur",
+    image: "",
+  },
+]
+export { homeMenu, gamesData, unsurData };
   
