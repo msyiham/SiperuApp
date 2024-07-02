@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { CurvedBottomBar } from 'react-native-curved-bottom-bar';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -16,7 +16,15 @@ import { Image } from 'react-native-animatable';
 const Stack = createNativeStackNavigator();
 
 function BottomTabNavigator({route}) {
-  const { user } = route.params;
+  const { user: initialUser, onUpdate } = route.params;
+  const [user, setUser] = useState(initialUser);
+
+  const handleUserUpdate = (updatedUser) => {
+    setUser(updatedUser);
+    if (onUpdate) {
+      onUpdate(updatedUser);
+    }
+  };
   const windowWidth = Dimensions.get('window').width;
   const windowHeight = Dimensions.get('window').height;
   const _renderIcon = (routeName, selectedTab) => {
@@ -81,7 +89,7 @@ function BottomTabNavigator({route}) {
       />
       <CurvedBottomBar.Screen
         name="account"
-        component={(props) => <Page.Account {...props} user={user} />}
+        component={(props) => <Page.Account {...props} user={user} onUpdate={handleUserUpdate} />}
         position="RIGHT"
       />
     </CurvedBottomBar.Navigator>
@@ -95,6 +103,10 @@ const Navigation = () => {
         {/* MainApp */}
         <Stack.Screen name="MainApp" component={BottomTabNavigator} />
         <Stack.Screen name="ScanAR" component={Page.ScanAR} />
+
+        {/* Edit Profile */}
+        <Stack.Screen name="EditProfile" component={Page.EditProfile} />
+
 
         {/* auth */}
         <Stack.Screen name="Login" component={Page.Auth.Login} />
@@ -112,6 +124,8 @@ const Navigation = () => {
         <Stack.Screen name="Unsur" component={Page.UnsurPage.Unsur} />
         <Stack.Screen name="UnsurDetail" component={Page.UnsurPage.UnsurDetail} />
 
+        {/* Menu */}
+        <Stack.Screen name="AI" component={Page.AI} />
       </Stack.Navigator>
   );
 };

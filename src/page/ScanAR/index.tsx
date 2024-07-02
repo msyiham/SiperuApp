@@ -1,57 +1,68 @@
 import { StyleSheet, Text, View } from 'react-native';
-import React from 'react';
-import { Viro3DObject, ViroARImageMarker, ViroARScene, ViroARTrackingTargets, ViroAmbientLight } from '@reactvision/react-viro';
+import React, { useEffect } from 'react';
+import { ViroARScene, ViroARSceneNavigator, ViroARTrackingTargets, ViroAmbientLight, Viro3DObject, ViroARImageMarker } from '@reactvision/react-viro';
 
-const ScanAR = () => {
-  ViroARTrackingTargets.createTargets({
-    markerImage: {
-      source: require("./AR/periodic-table.png"),
-      orientation: 'Up',
-      physicalWidth: 0.165
-    }
-  });
+const targets = [
+  { name: 'markerImage1', source: require("./AR/marker1.jpg") },
+  { name: 'markerImage2', source: require("./AR/marker2.jpeg") },
+  { name: 'markerImage3', source: require("./AR/marker3.jpg") },
+  { name: 'markerImage4', source: require("./AR/marker4.png") }
+];
 
-  const anchorFound = () => {
-    console.log("Anchor/Image detected");
-  };
+const MyScene = () => {
+  useEffect(() => {
+    const trackingTargets = {};
+    targets.forEach(target => {
+      trackingTargets[target.name] = {
+        source: target.source,
+        orientation: 'Up',
+        physicalWidth: 0.165
+      };
+    });
+    ViroARTrackingTargets.createTargets(trackingTargets);
+  }, []);
 
-  const on3DObjectLoadStart = () => {
-    console.log('3D object loading started');
-  };
+  const anchorFound = () => console.log("Anchor/Image detected");
+  const on3DObjectLoadStart = () => console.log('3D object loading started');
+  const on3DObjectLoadEnd = () => console.log('3D object loaded successfully');
+  const on3DObjectLoadError = event => console.error('3D object failed to load:', event.nativeEvent);
 
-  const on3DObjectLoadEnd = () => {
-    console.log('3D object loaded successfully');
-  };
-
-  const on3DObjectLoadError = (event) => {
-    console.error('3D object failed to load:', event.nativeEvent);
-  };
+  const renderARImageMarker = (target) => (
+    <ViroARImageMarker key={target.name} target={target.name} onAnchorFound={anchorFound}>
+      <ViroAmbientLight color="#FFFFFF" />
+      <Viro3DObject
+        source={require('./model/model.obj')}
+        scale={[0.08, 0.08, 0.08]}
+        rotation={[-150, 0, 0]}
+        type="OBJ"
+        onLoadStart={on3DObjectLoadStart}
+        onLoadEnd={on3DObjectLoadEnd}
+        onError={on3DObjectLoadError}
+      />
+    </ViroARImageMarker>
+  );
 
   return (
-    <View style={{ flex: 1 }}>
-      <Text>Loading AR Scene...</Text>
-      <ViroARScene onTrackingUpdated={() => console.log('AR tracking updated')}>
-        <ViroARImageMarker target={"markerImage"} onAnchorFound={anchorFound}>
-          <ViroAmbientLight color="#000" onAnchorFound={() => console.log('Ambient light anchor found')} />
-          <Viro3DObject
-            source={{ uri: 'https://firebasestorage.googleapis.com/v0/b/siperu-pkmk-2024.appspot.com/o/table.glb?alt=media&token=6da45369-9e13-43f8-bd6d-e15c73b00c14' }}
-            scale={[0.008, 0.008, 0.008]}
-            rotation={[-170, 0, 0]}
-            type="GLB"
-            onLoadStart={on3DObjectLoadStart}
-            onLoadEnd={on3DObjectLoadEnd}
-            onError={on3DObjectLoadError}
-          />
-        </ViroARImageMarker>
-      </ViroARScene>
-    </View>
+    <ViroARScene onTrackingUpdated={() => console.log('AR tracking updated')}>
+      {targets.map(renderARImageMarker)}
+    </ViroARScene>
   );
 };
+
+const ScanAR = () => (
+  <View style={styles.container}>
+    <Text style={styles.loadingText}>Loading AR Scene...</Text>
+    <ViroARSceneNavigator initialScene={{ scene: MyScene }} style={styles.container} />
+  </View>
+);
 
 export default ScanAR;
 
 const styles = StyleSheet.create({
-  webview: {
+  container: {
     flex: 1,
+  },
+  loadingText: {
+    color: 'black',
   },
 });

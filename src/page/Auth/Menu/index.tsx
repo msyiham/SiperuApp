@@ -14,7 +14,7 @@ const Menu = ({navigation}) => {
           <Text style={{fontFamily:Font.font.bold, fontSize:24, textAlign:'center', color:'white'}}>Daftar</Text>
           <Text style={{fontFamily:Font.font.regular, fontSize:15, textAlign:'center', color:'white'}}>Daftar sekarang dan Belajar Lebih Seru!</Text>
           <TouchableOpacity onPress={()=>navigation.navigate('Register')} style={[styles.button, {width:windowWidth*0.8, height:windowHeight*0.05, borderRadius:windowWidth*0.05, marginTop:windowHeight*0.04}]}>
-              <Text style={{color:'black', fontFamily:Font.font.semibold}}>Daftar lebih cepat dengan email  <Icon name="envelope" color="#900" /></Text>
+              <Text style={{color:'black', fontFamily:Font.font.semibold}}>Daftar lebih cepat dengan email  <Icon name="envelope" color="#000" /></Text>
           </TouchableOpacity>
           <View style={[styles.buttonLogin, {width:windowWidth*0.8, height:windowHeight*0.05, borderRadius:windowWidth*0.05, marginTop:windowHeight*0.04}]}>
               <Text style={{color:'white', fontFamily:Font.font.semibold, fontSize:13.5}}>

@@ -41,8 +41,10 @@ const Register = ({navigation}) => {
           grade: grade,
           alamat: "",
           fullName: fullName,
-          noHp: "",
-          totalPointsPostTest: 0,
+          numberPhone: "",
+          age: "",
+          birthday: "",
+          evaluasiPoint: 0,
           totalPointsPreTest: 0,
         });
     
@@ -103,10 +105,10 @@ const Register = ({navigation}) => {
         <View style={{alignItems:'center', marginTop:windowHeight*0.02, width:'100%'}}>
           <View>
             <CustomInput title="Email" keyboardType='email-address' placeholder="Email" value={email} setValue={setEmail}/>
-            <CustomInput title="Username" keyboardType='text' placeholder="Username" value={username} setValue={setUsername} />
+            <CustomInput title="Nama Pengguna" keyboardType='text' placeholder="Nama Pengguna" value={username} setValue={setUsername} />
             <CustomInput title="Nama Lengkap" keyboardType='text' placeholder="Isilah dengan nama lengkap" value={fullName} setValue={setFullName} />
             <CustomInput title="Asal Sekolah" keyboardType='text' placeholder="Nama Sekolah" value={school} setValue={setSchool} />
-            <CustomInput title="Tingkat Kelas" keyboardType='text' placeholder="Kelas 10,11,12" value={grade} setValue={setGrade} />
+            <CustomInput title="Tingkat Kelas" keyboardType='text' placeholder="10/ 11/ 12" value={grade} setValue={setGrade} />
             <PasswordInput onPasswordChange={onPasswordChange}/>
           </View>
           <TouchableOpacity onPress={onRegisterPressed} style={[styles.button, {width:windowWidth*0.8, height:windowHeight*0.05, borderRadius:windowWidth*0.05, marginTop:windowHeight*0.04}]}>

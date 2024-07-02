@@ -1,22 +1,28 @@
-import { ScrollView, StyleSheet, Text, View, Dimensions, TouchableOpacity } from 'react-native'
-import React from 'react'
+import { ScrollView, StyleSheet, Text, View, Dimensions, TouchableOpacity, Image } from 'react-native'
+import React, {useState, useEffect} from 'react'
 import Container from '../../components/Container'
 import Font from '../../assets/fonts/font'
 import { homeMenu } from '../../data/data'
-import { Image } from 'react-native-animatable'
 import Ionicons from 'react-native-vector-icons/FontAwesome';
 const Home = ({user, navigation}) => {
   const windowWidth = Dimensions.get('window').width;
   const windowHeight = Dimensions.get('window').height;
-
+  const [photoURL, setPhotoUrl] = useState(null);
+  useEffect(() => {
+    if (user.photoURL) {
+      setPhotoUrl(user.photoURL);
+    } else {
+      setPhotoUrl(null); // Set photoURL to null if photoURL is empty
+    }
+  }, [user.photoURL]);
   return (
     <Container>
       <View style={[styles.header, {marginBottom:15,height:windowHeight*0.3, borderBottomEndRadius:windowWidth*0.1, borderBottomStartRadius:windowWidth*0.1}]}>
         <View style={{flexDirection:'row'}}>
-          <View style={{width:windowWidth*0.2}}>
-            <Text style={{color:'black'}}>Foto</Text>
+          <View style={{width:windowWidth*0.3, alignItems:'center', justifyContent:'center'}}>
+            <Image source={{ uri: photoURL || 'https://firebasestorage.googleapis.com/v0/b/siperu-pkmk-2024.appspot.com/o/user.png?alt=media&token=1fd84b0b-0a31-4f33-8f3b-0195cb789ce6' }} style={[{width:windowWidth*0.2, height:windowWidth*0.2, borderRadius:windowWidth*0.2}]}/>
           </View>
-          <View>
+          <View style={{width:windowWidth*0.7, justifyContent:'center'}}>
             <View style={{backgroundColor:"#FFD911",width:windowWidth*0.4, height:windowHeight*0.03, padding:1, borderRadius:windowWidth*0.01}}>
               <Text style={{color:'black', fontFamily:Font.font.semibold, fontSize:12}}>Halo, Selamat Datang</Text>
             </View>

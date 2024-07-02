@@ -11,6 +11,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { doc, setDoc, getDoc } from 'firebase/firestore'
 import Loading from '../../../components/Loading'
 const Login = ({navigation}) => {
+  const initialUser = {}; // Initial user state
+  const [user, setUser] = useState(initialUser);
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -22,7 +24,9 @@ const Login = ({navigation}) => {
   const [loading, setLoading] = useState(false);
   const auth = FIREBASE_AUTH;
   const firestore = FIRESTORE_DB;
-
+  const handleUserUpdate = (updatedUser) => {
+    setUser(updatedUser); // Function to update user state
+  };
   const LoginPressed = () => {
     if (!email || !password) {
       // Validate if email or password is empty
@@ -50,7 +54,13 @@ const Login = ({navigation}) => {
       if (userDocSnap.exists()) {
         const userData = userDocSnap.data();
         const username = userData.username;
+        handleUserUpdate(userData);
 
+        // Navigate to the Home screen or perform any other actions
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'MainApp', params: { user: userData } }],
+        });
         // Navigate to the Home screen or perform any other actions
         navigation.reset({
           index: 0,
@@ -133,6 +143,11 @@ const Login = ({navigation}) => {
           <View>
             <CustomInput title="Email" keyboardType='email-address' placeholder="Email" value={email} setValue={setEmail}/>
             <PasswordInput onPasswordChange={onPasswordChange}/>
+          </View>
+          <View style={{width:windowWidth*0.8, alignItems:'center'}}>
+            <TouchableOpacity onPress={()=>navigation.navigate('ForgotPassword')}>
+              <Text style={{color:'#FEFBEA', fontFamily:Font.font.regular, fontSize:15}}>Lupa Kata sandi?</Text>
+            </TouchableOpacity>
           </View>
           <TouchableOpacity onPress={LoginPressed} style={[styles.button, {width:windowWidth*0.8, height:windowHeight*0.05, borderRadius:windowWidth*0.05, marginTop:windowHeight*0.04}]}>
               <Text style={{color:'black', fontFamily:Font.font.semibold}}>Masuk</Text>
