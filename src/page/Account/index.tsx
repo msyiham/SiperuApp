@@ -22,6 +22,26 @@ const Account = ({user, navigation, onUpdate }) => {
       },
     });
   };
+  const goToStudyStyleTest = () => {
+    const mostSelectedAnswer = user.StudyStyleTest
+    if (user.StudyStyleTest === "") {
+      navigation.replace('StudyStyleTest', {
+        user,
+        onUpdate: (updatedUser) => {
+          onUpdate(updatedUser);
+        },
+      });
+    } else{
+      navigation.navigate('StudyStyleResult', {
+        mostSelectedAnswer,
+        user,
+        onUpdate: (updatedUser) => {
+          onUpdate(updatedUser);
+        },
+      });
+    }
+
+  };
   return (
     <Container>
       <View style={[styles.header, {height:windowHeight*0.3, borderBottomEndRadius:windowWidth*0.1, borderBottomStartRadius:windowWidth*0.1}]}>
@@ -37,7 +57,7 @@ const Account = ({user, navigation, onUpdate }) => {
           <TouchableOpacity onPress={goToEditProfile} style={[styles.button, {width:windowWidth*0.9, height:windowHeight*0.07, borderRadius:windowWidth*0.03}]}>
             <Text style={styles.buttonText}>Ubah Profil</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={[styles.button, {width:windowWidth*0.9, height:windowHeight*0.07, borderRadius:windowWidth*0.03}]}>
+          <TouchableOpacity onPress={goToStudyStyleTest} style={[styles.button, {width:windowWidth*0.9, height:windowHeight*0.07, borderRadius:windowWidth*0.03}]}>
             <Text style={styles.buttonText}>Tes Gaya Belajar</Text>
           </TouchableOpacity>
           <TouchableOpacity style={[styles.button, {width:windowWidth*0.9, height:windowHeight*0.07, borderRadius:windowWidth*0.03}]}>

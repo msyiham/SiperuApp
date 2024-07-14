@@ -49,6 +49,7 @@ const EditProfile = ({ route, navigation }) => {
                 const imageResponse = await fetch(image.uri);
                 const blob = await imageResponse.blob();
                 const photoURL = await uploadImage(blob);
+                setLoading(true);
                 await updatePhoto(photoURL);
             }
         } catch (error) {
@@ -76,7 +77,7 @@ const EditProfile = ({ route, navigation }) => {
         try {
             const uid = user.uid;
             const userDocRef = doc(firestore, 'users', uid);
-            setLoading(true);
+            
             await updateDoc(userDocRef, {
                 photoURL: photoURL,
             });

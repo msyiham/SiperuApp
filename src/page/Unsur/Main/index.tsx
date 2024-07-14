@@ -4,7 +4,8 @@ import Container from '../../../components/Container'
 import Header from '../../../components/Header'
 import { unsurData } from '../../../data/data'
 import Font from '../../../assets/fonts/font'
-const Unsur = ({navigation}) => {
+const Unsur = ({navigation, route}) => {
+    const {user, onUpdate} = route.params
     const { width: windowWidth, height: windowHeight } = Dimensions.get('window');
   return (
     <Container>
@@ -14,7 +15,7 @@ const Unsur = ({navigation}) => {
             <View key={index} style={{width:windowWidth*0.8, justifyContent:'center', alignItems:'center'}}>
             <TouchableOpacity
               style={[styles.menuItem, { width: windowWidth * 0.8, height: windowHeight * 0.38, borderRadius: windowWidth * 0.03 }]}
-              onPress={() => navigation.navigate("UnsurDetail", { link: item.image })}
+              onPress={() => navigation.navigate(item.page, { link: item.link, user, onUpdate })}
             >
               <Image source={item.icon} style={[styles.icon, { width: windowWidth * 0.5, height: windowWidth * 0.5 }]} />
               <View style={styles.textContainer}>

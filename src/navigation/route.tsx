@@ -15,18 +15,22 @@ import { Image } from 'react-native-animatable';
 
 const Stack = createNativeStackNavigator();
 
-function BottomTabNavigator({route}) {
+const BottomTabNavigator = ({ route, navigation  }) => {
   const { user: initialUser, onUpdate } = route.params;
   const [user, setUser] = useState(initialUser);
 
+
+  console.log("main app", onUpdate)
   const handleUserUpdate = (updatedUser) => {
     setUser(updatedUser);
     if (onUpdate) {
       onUpdate(updatedUser);
     }
   };
+
   const windowWidth = Dimensions.get('window').width;
   const windowHeight = Dimensions.get('window').height;
+
   const _renderIcon = (routeName, selectedTab) => {
     let icon = '';
 
@@ -58,7 +62,13 @@ function BottomTabNavigator({route}) {
       </TouchableOpacity>
     );
   };
-
+  console.log("Halaman Main App:", handleUserUpdate);
+  const goToScanAR = () => {
+    navigation.navigate("ScanAR", {
+      user,
+      onUpdate:handleUserUpdate
+    });
+  };
   return (
     <CurvedBottomBar.Navigator
       type="UP"
@@ -72,10 +82,9 @@ function BottomTabNavigator({route}) {
       renderCircle={({ selectedTab, navigate }) => (
         <Animated.View style={styles.btnCircleUp}>
           <TouchableOpacity
-            style={styles.button}
-            onPress={() => navigate("ScanAR")}
+            onPress={goToScanAR}
           >
-            <Image source={require('../assets/img/AR_ICON.png')} height={windowHeight*0.01}/>
+            <Image source={require('../assets/img/AR_ICON.png')} height={windowHeight * 0.01} />
           </TouchableOpacity>
         </Animated.View>
       )}
@@ -85,7 +94,7 @@ function BottomTabNavigator({route}) {
       <CurvedBottomBar.Screen
         name="home"
         position="LEFT"
-        component={(props) => <Page.Home {...props} user={user} />}
+        component={(props) => <Page.Home {...props} user={user} onUpdate={handleUserUpdate} />}
       />
       <CurvedBottomBar.Screen
         name="account"
@@ -94,7 +103,7 @@ function BottomTabNavigator({route}) {
       />
     </CurvedBottomBar.Navigator>
   );
-}
+};
 
 const Navigation = () => {
   return (
@@ -102,7 +111,20 @@ const Navigation = () => {
         <Stack.Screen name="SplashScreen" component={Page.SplashScreen} />
         {/* MainApp */}
         <Stack.Screen name="MainApp" component={BottomTabNavigator} />
-        <Stack.Screen name="ScanAR" component={Page.ScanAR} />
+
+
+        {/* Lock Screen */}
+        <Stack.Screen name="LockPremium" component={Page.LockPremium} />
+
+
+        {/* ScanAR */}
+        <Stack.Screen name="ScanAR" component={Page.ScanAR.Main} />
+        <Stack.Screen name="Hydrogen" component={Page.ScanAR.Hydrogen} />
+        <Stack.Screen name="Lithium" component={Page.ScanAR.Lithium} />
+        <Stack.Screen name="Calcium" component={Page.ScanAR.Calcium} />
+        <Stack.Screen name="Aluminium" component={Page.ScanAR.Aluminium} />
+        <Stack.Screen name="Natrium" component={Page.ScanAR.Natrium} />
+
 
         {/* Edit Profile */}
         <Stack.Screen name="EditProfile" component={Page.EditProfile} />
@@ -114,18 +136,47 @@ const Navigation = () => {
         <Stack.Screen name="Register" component={Page.Auth.Register} />
         <Stack.Screen name="ForgotPassword" component={Page.Auth.ForgotPassword} />
 
+
         {/* Games */}
         <Stack.Screen name="MenuGames" component={Page.Games.MenuGames} />
         <Stack.Screen name="PecahBalon" component={Page.Games.PecahBalon} />
         <Stack.Screen name="TTS" component={Page.Games.TTS} />
         <Stack.Screen name="PukulTikus" component={Page.Games.PukulTikus} />
 
+
         {/* Unsur */}
         <Stack.Screen name="Unsur" component={Page.UnsurPage.Unsur} />
-        <Stack.Screen name="UnsurDetail" component={Page.UnsurPage.UnsurDetail} />
+        <Stack.Screen name="PeriodicTable" component={Page.UnsurPage.PeriodicTable} />
+        <Stack.Screen name="Music" component={Page.UnsurPage.Music} />
 
         {/* Menu */}
         <Stack.Screen name="AI" component={Page.AI} />
+
+
+        {/* Exploration */}
+        <Stack.Screen name="ExplorationMain" component={Page.Exploration.ExplorationMain} />
+        <Stack.Screen name="AudioBook" component={Page.Exploration.AudioBook} />
+
+        <Stack.Screen name="LearningVideos" component={Page.Exploration.LearningVideos.List} />
+        <Stack.Screen name="VideoPlayer" component={Page.Exploration.LearningVideos.VideoPlayer} />
+
+        <Stack.Screen name="ExcerciseMenu" component={Page.Exploration.ExcerciseMenu} />
+        <Stack.Screen name="ExerciseResult" component={Page.Exploration.ExerciseResult} />
+        <Stack.Screen name="ExerciseMark" component={Page.Exploration.ExerciseMark} />
+        <Stack.Screen name="Excercise1" component={Page.Exploration.Excercise1} />
+        <Stack.Screen name="Excercise2" component={Page.Exploration.Excercise2} />
+        <Stack.Screen name="Excercise3" component={Page.Exploration.Excercise3} />
+
+
+        {/* StudyStyleTest */}
+        <Stack.Screen name="StudyStyleTest" component={Page.StudyStyleTest.Test} />
+        <Stack.Screen name="StudyStyleResult" component={Page.StudyStyleTest.Result} />
+
+
+        {/* Forum Discussion */}
+        <Stack.Screen name="ShowDiscuss" component={Page.ForumDiscussion.Show} />
+        <Stack.Screen name="CreateDiscuss" component={Page.ForumDiscussion.Create} />
+        <Stack.Screen name="DetailDiscuss" component={Page.ForumDiscussion.Detail} />
       </Stack.Navigator>
   );
 };
@@ -144,28 +195,27 @@ export const styles = StyleSheet.create({
     shadowOpacity: 1,
     shadowRadius: 5,
   },
-  button: {
-    flex: 1,
-    justifyContent: 'center',
-  },
   bottomBar: {},
   btnCircleUp: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
+    width: 70,
+    height: 70,
+    borderRadius: 35,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#DAB700',
-    bottom: 18,
+    backgroundColor: '#FFD911',
+    bottom: 25,
+    // iOS Shadow
     shadowColor: '#000',
     shadowOffset: {
-      width: 1,
-      height: 1,
+      width: 0,
+      height: 2,
     },
-    shadowOpacity: 0.2,
-    shadowRadius: 1.41,
-    elevation: 1,
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    // Android Shadow
+    elevation: 5,
   },
+  
   imgCircle: {
     width: 25,
     height: 25,
@@ -177,8 +227,8 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   img: {
-    width: 30,
-    height: 30,
+    width: 25,
+    height: 25,
   },
 });
 

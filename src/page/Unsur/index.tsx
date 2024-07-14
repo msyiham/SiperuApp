@@ -1,3 +1,4 @@
 import Unsur from "./Main";
-import UnsurDetail from "./Detail";
-export {Unsur, UnsurDetail}
+import Music from "./Music";
+import PeriodicTable from "./PeriodicTable";
+export {Unsur, PeriodicTable, Music}

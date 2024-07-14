@@ -1,20 +1,23 @@
-import { StyleSheet, useWindowDimensions, View } from 'react-native';
-import React, { useState } from 'react';
+import { KeyboardAvoidingView, StyleSheet, useWindowDimensions, View,Platform } from 'react-native';
+import React from 'react';
 import { WebView } from 'react-native-webview';
-import Loading from '../../components/Loading';
-const AI = () => {
-  const [loading, setLoading] = useState(true);
+
+const AI = ({route, navigation}) => {
   const { width, height } = useWindowDimensions();
+  const {user, onUpdate} = route.params
+  if (user.deviceRegistered === 0) {
+      navigation.replace("LockPremium", {user, onUpdate})
+  }
   return (
-    <View style={{flex: 1, backgroundColor: '#002E9B' }}>
-      <Loading visible={loading}/>
+    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} keyboardVerticalOffset={25} style={{flex:1}}>
+    <View style={{flex:1, backgroundColor: '#0641CD' }}>
       <WebView
-        style={{ width, height }}
-        source={{ uri: 'https://mediafiles.botpress.cloud/5fee8dad-c6d3-40be-9ad2-5ee9227084f7/webchat/bot.html' }}
-        originWhitelist={['*']}
-        onLoad={() => setLoading(false)}
-      />
+        style={{ flex: 1 }}
+        source={{ uri: 'https://siperu-ai.netlify.app' }}
+        scrollEnabled={true}
+        />
     </View>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -22,7 +25,7 @@ export default AI;
 
 const styles = StyleSheet.create({
   webview: {
-    flex:1,
+    flex: 1,
     backgroundColor: '#002E9B',
   },
 });

@@ -44,8 +44,10 @@ const Register = ({navigation}) => {
           numberPhone: "",
           age: "",
           birthday: "",
-          evaluasiPoint: 0,
-          totalPointsPreTest: 0,
+          exercise1: 0,
+          exercise2: 0,
+          exercise3: 0,
+          StudyStyleTest: "",
         });
     
         console.log(response);

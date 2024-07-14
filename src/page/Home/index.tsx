@@ -4,19 +4,45 @@ import Container from '../../components/Container'
 import Font from '../../assets/fonts/font'
 import { homeMenu } from '../../data/data'
 import Ionicons from 'react-native-vector-icons/FontAwesome';
-const Home = ({user, navigation}) => {
+import PopUp from '../../components/PopUp'
+const Home = ({user, navigation, onUpdate}) => {
   const windowWidth = Dimensions.get('window').width;
   const windowHeight = Dimensions.get('window').height;
   const [photoURL, setPhotoUrl] = useState(null);
+  const [popupVisible, setPopupVisible] = useState(false);
   useEffect(() => {
     if (user.photoURL) {
       setPhotoUrl(user.photoURL);
     } else {
       setPhotoUrl(null); // Set photoURL to null if photoURL is empty
     }
-  }, [user.photoURL]);
+
+    if (user.StudyStyleTest === "") {
+      setPopupVisible(true);
+    }
+  }, [user.photoURL, user.StudyStyleTest]);
+  const goToMenu = (item) => {
+    console.log("Halaman exploration main:", onUpdate);
+    navigation.navigate(item.page, {
+      user,
+      onUpdate
+    });
+  };
+  const goToStudyTestStyle = () => {
+    console.log("Halaman test gaya:", onUpdate);
+    navigation.navigate("StudyStyleTest", {
+      user,
+      onUpdate
+    });
+  };
+
+  const closePopup = () => {
+    setPopupVisible(false);
+  };
+  console.log(user.deviceRegistered)
   return (
     <Container>
+      <PopUp visible={popupVisible} onClose={closePopup} onPress={()=>goToStudyTestStyle()}/>
       <View style={[styles.header, {marginBottom:15,height:windowHeight*0.3, borderBottomEndRadius:windowWidth*0.1, borderBottomStartRadius:windowWidth*0.1}]}>
         <View style={{flexDirection:'row'}}>
           <View style={{width:windowWidth*0.3, alignItems:'center', justifyContent:'center'}}>
@@ -39,11 +65,10 @@ const Home = ({user, navigation}) => {
               <TouchableOpacity 
                 key={index} 
                 style={[styles.menuItem,{width:windowWidth*0.9, height:windowHeight*0.22, borderRadius:windowWidth*0.03}]} 
-                onPress={() => navigation.navigate(item.page)}
-              >
+                onPress={()=>goToMenu(item)}>
                 <View style={{width:windowWidth*0.35, height:windowHeight*0.2, justifyContent:'center', alignItems:'center', }}>
                   <View style={[styles.iconContainer, {width:windowWidth*0.25, height:windowWidth*0.25, borderRadius:windowWidth*0.03}]}>
-                    <Image source={item.icon} style={styles.icon} />
+                    <Image source={item.icon} style={styles.icon} width={windowWidth*0.2} height={windowWidth*0.2} resizeMode="cover" />
                   </View>
                 </View>
                 <View style={[styles.textContainer]}>
