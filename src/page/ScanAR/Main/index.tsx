@@ -27,7 +27,7 @@ const Main = ({navigation, route}) => {
                     <TouchableOpacity onPress={()=>navigation.navigate('Natrium')} style={[styles.button, {width:windowWidth*0.9, height:windowHeight*0.07, borderRadius:windowWidth*0.03}]}>
                         <Text style={styles.buttonText}>Natrium</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={()=>navigation.navigate('Calcium')} style={[styles.button, {width:windowWidth*0.9, height:windowHeight*0.07, borderRadius:windowWidth*0.03}]}>
+                    <TouchableOpacity style={[styles.button, {width:windowWidth*0.9, height:windowHeight*0.07, borderRadius:windowWidth*0.03}]}>
                         <Text style={styles.buttonText}>Kalium</Text>
                     </TouchableOpacity>
                     <TouchableOpacity  style={[styles.button, {width:windowWidth*0.9, height:windowHeight*0.07, borderRadius:windowWidth*0.03}]}>
@@ -48,7 +48,7 @@ const Main = ({navigation, route}) => {
                     <TouchableOpacity onPress={()=>navigation.navigate('Calcium')}  style={[styles.button, {width:windowWidth*0.9, height:windowHeight*0.07, borderRadius:windowWidth*0.03}]}>
                         <Text style={styles.buttonText}>Kalsium</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={()=>navigation.navigate('Aluminium')}  style={[styles.button, {width:windowWidth*0.9, height:windowHeight*0.07, borderRadius:windowWidth*0.03}]}>
+                    <TouchableOpacity  style={[styles.button, {width:windowWidth*0.9, height:windowHeight*0.07, borderRadius:windowWidth*0.03}]}>
                         <Text style={styles.buttonText}>Stronsium</Text>
                     </TouchableOpacity>
                     <TouchableOpacity  style={[styles.button, {width:windowWidth*0.9, height:windowHeight*0.07, borderRadius:windowWidth*0.03}]}>
@@ -87,6 +87,7 @@ const styles = StyleSheet.create({
     content: {
         alignItems:'center',
         marginTop: 25,
+        marginBottom:10,
         paddingHorizontal: 15, // Add some horizontal padding if needed
       },
       buttonText: {

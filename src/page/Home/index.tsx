@@ -39,7 +39,21 @@ const Home = ({user, navigation, onUpdate}) => {
   const closePopup = () => {
     setPopupVisible(false);
   };
+  const exercises = [user.exercise1, user.exercise2, user.exercise3];
+  const totalExercises = exercises.filter(exercise => exercise !== 0).length;
+  const totalPoints = exercises.reduce((total, exercise) => total + exercise, 0);
+  const averageProgress = totalPoints / (totalExercises * 10); // Assuming the maximum point for each exercise is 10
+  const averageTotal = Math.round(averageProgress * 100);
+
   console.log(user.deviceRegistered)
+  const goToAchievement = () => {
+    navigation.navigate('Achievement', {
+      user,
+      onUpdate: (updatedUser) => {
+        onUpdate(updatedUser);
+      },
+    });
+  };
   return (
     <Container>
       <PopUp visible={popupVisible} onClose={closePopup} onPress={()=>goToStudyTestStyle()}/>
@@ -49,11 +63,23 @@ const Home = ({user, navigation, onUpdate}) => {
             <Image source={{ uri: photoURL || 'https://firebasestorage.googleapis.com/v0/b/siperu-pkmk-2024.appspot.com/o/user.png?alt=media&token=1fd84b0b-0a31-4f33-8f3b-0195cb789ce6' }} style={[{width:windowWidth*0.2, height:windowWidth*0.2, borderRadius:windowWidth*0.2}]}/>
           </View>
           <View style={{width:windowWidth*0.7, justifyContent:'center'}}>
-            <View style={{backgroundColor:"#FFD911",width:windowWidth*0.4, height:windowHeight*0.03, padding:1, borderRadius:windowWidth*0.01}}>
+            <View style={{backgroundColor:"#FFD911",width:windowWidth*0.4, height:windowHeight*0.03, padding:1, borderRadius:windowWidth*0.01, alignItems:"center"}}>
               <Text style={{color:'black', fontFamily:Font.font.semibold, fontSize:12}}>Halo, Selamat Datang</Text>
             </View>
             <Text style={{color:'black', fontFamily:Font.font.bold, fontSize:15}}>{user.fullName}</Text>
             <Text style={{color:'black', fontFamily:Font.font.semibold, fontSize:13}}>Siswa {user.school} Kelas {user.grade}</Text>
+            {averageTotal !== 0 && (
+              <>
+              <Text style={{color:'black', fontFamily:Font.font.semibold, fontSize:13, marginTop:10}}>
+                Nilai rata-rata Anda {averageTotal}%
+              </Text>
+              <TouchableOpacity onPress={goToAchievement}>
+                <Text style={{color:'gray', fontFamily:Font.font.regular, fontSize:13, marginTop:3}}>
+                  Lihat Capaian
+                </Text>
+              </TouchableOpacity>
+              </>
+            )}
           </View>
         </View>
       </View>

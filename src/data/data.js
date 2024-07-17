@@ -19,7 +19,7 @@ const homeMenu = [
       page: "ExplorationMain"
     },
     {
-      title: "Robo Peru (AI)",
+      title: "Robo Peru",
       icon: require('../assets/img/ICON/ai.png'),
       description: "AI akan membantumu mengetahui hal baru.",
       page: "AI"
@@ -57,7 +57,7 @@ const gamesData = [
 
 const unsurData = [
   {
-    title: "Tabel Periodik",
+    title: "SPU ber audio",
     icon: require('../assets/img/UNSUR/2.png'),
     description: "Mempelajari materi kimia Atom & Unsur",
     page: "PeriodicTable",
@@ -110,6 +110,51 @@ const excerciseMenu = [
     data:"exercise1",
     description: "Sifat-sifat Keperiodikan Unsur"
   },
+]
+const contactData = [
+  {
+    title: "Website",
+    icon: "internet-explorer",
+    text:"siperu.netlify.app",
+    linkTo: "https://siperu.netlify.app",
+  },
+  {
+    title: "Email",
+    icon: "envelope",
+    text:"siperu27@gmail.com",
+    linkTo: "mailto:siperu27@gmail.com",
+  },
+  {
+    title: "WhatsApp",
+    icon: "whatsapp",
+    text:"+62 838-2358-1403",
+    linkTo: "https://wa.me/6283823581403",
+  },
+  {
+    title: "Instagram",
+    icon: "instagram",
+    text:"@siperu_pkmk",
+    linkTo: "https://www.instagram.com/siperu_pkmk/",
+  },
+  {
+    title: "Youtube",
+    icon: "youtube",
+    text:"SI PERU PKMK",
+    linkTo: "https://www.youtube.com/@siperu_pkmk",
+  },
+  {
+    title: "Facebook",
+    icon: "facebook",
+    text:"siperupkmk",
+    linkTo: "https://facebook.com/siperupkmk",
+  },
+  {
+    title: "Tiktok",
+    icon: "tiktok",
+    text:"siperu_pkmk",
+    linkTo: "https://www.tiktok.com/@si_peru01",
+  },
+
 ]
 
 const recomendationDetail = [
@@ -175,5 +220,5 @@ const recomendationDetail = [
   },
 ];
 
-export { homeMenu, gamesData, unsurData, explorationMenu, excerciseMenu, recomendationDetail };
+export { homeMenu, gamesData, unsurData, explorationMenu, excerciseMenu, recomendationDetail, contactData };
   

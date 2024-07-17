@@ -21,7 +21,7 @@ const ExplorationMain = ({ navigation, route }) => {
       <ScrollView style={{ flex: 1 }}>
         <View>
           {explorationMenu.map((item, index) => (
-            <View key={index} style={{ width: windowWidth * 0.5, justifyContent: 'center', alignItems: 'center' }}>
+            <View key={index} style={{ width: windowWidth, justifyContent: 'center', alignItems: 'center' }}>
               <TouchableOpacity
                 style={[styles.menuItem, { width: windowWidth * 0.5, height: windowHeight * 0.35, borderRadius: windowWidth * 0.03 }]}
                 onPress={() => goToMenu(item)}

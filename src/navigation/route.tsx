@@ -111,10 +111,17 @@ const Navigation = () => {
         <Stack.Screen name="SplashScreen" component={Page.SplashScreen} />
         {/* MainApp */}
         <Stack.Screen name="MainApp" component={BottomTabNavigator} />
+        <Stack.Screen name="Achievement" component={Page.Achievement} />
 
 
         {/* Lock Screen */}
         <Stack.Screen name="LockPremium" component={Page.LockPremium} />
+
+
+        {/* Account Menu */}
+        <Stack.Screen name="UserGuide" component={Page.AccountMenu.UserGuide} />
+        <Stack.Screen name="TermConditions" component={Page.AccountMenu.TermConditions} />
+        <Stack.Screen name="Contact" component={Page.AccountMenu.Contact} />
 
 
         {/* ScanAR */}

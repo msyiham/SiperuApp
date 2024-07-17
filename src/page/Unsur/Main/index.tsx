@@ -17,7 +17,7 @@ const Unsur = ({navigation, route}) => {
               style={[styles.menuItem, { width: windowWidth * 0.8, height: windowHeight * 0.38, borderRadius: windowWidth * 0.03 }]}
               onPress={() => navigation.navigate(item.page, { link: item.link, user, onUpdate })}
             >
-              <Image source={item.icon} style={[styles.icon, { width: windowWidth * 0.5, height: windowWidth * 0.5 }]} />
+              <Image source={item.icon} style={[styles.icon, { width: windowWidth * 0.7, height: windowWidth * 0.5 }]} resizeMode='contain' />
               <View style={styles.textContainer}>
                 <View style={[styles.buttonContainer, { height: windowHeight * 0.05, width: windowWidth * 0.7 }]}>
                 <Text style={styles.itemTitle}>{item.title}</Text>
@@ -41,12 +41,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     icon: {
-        resizeMode: 'stretch',
+      marginTop:15
     },
     textContainer: {
         justifyContent: 'center',
         alignItems:"center",
-        marginTop:10,
+        marginTop:15,
     },
     itemTitle: {
         fontFamily: Font.font.bold,

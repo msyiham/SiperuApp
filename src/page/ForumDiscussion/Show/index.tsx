@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, StyleSheet, TextInput, TouchableOpacity, Dimensions } from 'react-native';
+import { View, Text, FlatList, StyleSheet, TextInput, TouchableOpacity, Dimensions, Alert } from 'react-native';
 import { FIRESTORE_DB } from '../../../hooks/firebase';
-import { collection, doc, getDoc, getDocs, addDoc, onSnapshot } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, addDoc, onSnapshot, deleteDoc } from 'firebase/firestore';
 import Icon from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome5';
 import Container from '../../../components/Container';
@@ -13,6 +13,7 @@ const Show = ({ route, navigation }) => {
     const windowWidth = Dimensions.get('window').width;
     const windowHeight = Dimensions.get('window').height;
     const [posts, setPosts] = useState([]);
+    const [searchQuery, setSearchQuery] = useState('');
     const firestore = FIRESTORE_DB;
 
     useEffect(() => {
@@ -75,7 +76,7 @@ const Show = ({ route, navigation }) => {
                 if (post.unsubscribeLikes) post.unsubscribeLikes();
             });
         };
-    }, [firestore, user.uid]);
+    }, [firestore, user.uid, posts]);
 
     const createLike = async (postId, userId) => {
         try {
@@ -87,35 +88,87 @@ const Show = ({ route, navigation }) => {
             console.error("Error adding like: ", error);
         }
     };
+    const deletePost = async (postId) => {
+        Alert.alert(
+            'Konfirmasi',
+            'Apakah Anda yakin ingin menghapus postingan ini?',
+            [
+                {
+                    text: 'Batal',
+                    style: 'cancel'
+                },
+                {
+                    text: 'Hapus',
+                    onPress: async () => {
+                        try {
+                            await deleteDoc(doc(firestore, 'posts', postId));
+                            console.log('Post deleted!');
+                        } catch (error) {
+                            console.error("Error deleting post: ", error);
+                        }
+                    },
+                    style: 'destructive'
+                }
+            ]
+        );
+    };
 
-    const renderItem = ({ item }) => (
-        <View style={[styles.postContainer, { width: windowWidth * 0.9 }]}>
-            <Text style={styles.postUsername}>{item.username}</Text>
-            <Text style={styles.postSchool}>{item.school} Kelas {item.grade}</Text>
-            <Text style={styles.postText}>{item.text}</Text>
-            {item.timestamp && (
-                <Text style={styles.postInfo}>
-                    diposting pada: {item.timestamp.toDate().toLocaleDateString('id-ID', { month: 'long', day: 'numeric', year: 'numeric' })}
-                </Text>
-            )}
-            <View style={{ paddingTop: 5, borderTopWidth: 1, borderColor: "black", marginVertical: 5, flexDirection: 'row', justifyContent: "space-between" }}>
-                <View>
-                    <Text style={styles.toolText}>{item.commentCount} Komentar</Text>
+    const renderItem = ({ item }) => {
+            const isUserPost = item.userId === user.uid;
+    
+        return (
+            <View style={[styles.postContainer, { width: windowWidth * 0.9 }]}>
+                <Text style={styles.postUsername}>{isUserPost ? "Dibuat oleh Anda" : item.username}</Text>
+                {!isUserPost && (
+                    <Text style={styles.postSchool}>{item.school} Kelas {item.grade}</Text>
+                )}
+                <Text style={styles.postText}>{item.text}</Text>
+                {item.timestamp && (
+                    <Text style={styles.postInfo}>
+                        diposting pada: {item.timestamp.toDate().toLocaleDateString('id-ID', { month: 'long', day: 'numeric', year: 'numeric' })}
+                    </Text>
+                )}
+                <View style={{ paddingTop: 5, borderTopWidth: 1, borderColor: "black", marginVertical: 5, flexDirection: 'row', justifyContent: "space-between" }}>
+                    <View>
+                        <Text style={styles.toolText}>{item.commentCount} Komentar</Text>
+                    </View>
+                    <View>
+                        <TouchableOpacity 
+                            onPress={() => createLike(item.id, user.uid)} 
+                            style={{ marginBottom: 5 }} 
+                            disabled={item.userLiked}
+                        >
+                            <FontAwesome 
+                                name="thumbs-up" 
+                                color="black" 
+                                size={25} 
+                                solid={item.userLiked} 
+                            />
+                        </TouchableOpacity>
+                        <Text style={styles.toolText}>{item.likeCount} Like</Text>
+                    </View>
                 </View>
                 <View>
-                    <TouchableOpacity onPress={() => createLike(item.id, user.uid)} style={{ marginBottom: 5 }}>
-                        <FontAwesome name="thumbs-up" color="black" size={25} solid={item.userLiked} />
+                    {isUserPost && (
+                        <TouchableOpacity style={styles.deleteButton} onPress={() => deletePost(item.id)}>
+                            <Text style={styles.deleteButtonText}>Hapus</Text>
+                        </TouchableOpacity>
+                    )}
+                    <TouchableOpacity style={styles.detailButton} onPress={() => navigation.navigate("DetailDiscuss", { user: user, postId: item.id })}>
+                        <Text style={styles.detailButtonText}>Lihat Detail</Text>
                     </TouchableOpacity>
-                    <Text style={styles.toolText}>{item.likeCount} Like</Text>
                 </View>
             </View>
-            <View>
-                <TouchableOpacity style={styles.detailButton} onPress={() => navigation.navigate("DetailDiscuss", { user: user, postId: item.id })}>
-                    <Text style={styles.detailButtonText}>Lihat Detail</Text>
-                </TouchableOpacity>
-            </View>
-        </View>
-    );    
+        );
+    };
+    
+
+    const filteredPosts = posts.filter(post =>
+        post.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        post.grade.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        post.school.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        post.text.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
     return (
         <Container>
@@ -126,8 +179,9 @@ const Show = ({ route, navigation }) => {
                         placeholder='Cari...'
                         placeholderTextColor={"gray"}
                         style={styles.searchInput}
+                        value={searchQuery}
+                        onChangeText={setSearchQuery}
                     />
-                    <Icon name="search" color="gray" size={30} />
                 </View>
                 <TouchableOpacity onPress={() => navigation.navigate('CreateDiscuss', { user: user })} style={[styles.buttonCreate, { width: windowWidth * 0.4, height: windowHeight * 0.05 }]}>
                     <Text style={styles.buttonText}>Buat  <Icon name="chatbox" size={15} color="black" /></Text>
@@ -136,7 +190,7 @@ const Show = ({ route, navigation }) => {
             <View style={{ flex: 1 }}>
                 <View>
                     <FlatList
-                        data={posts}
+                        data={filteredPosts}
                         renderItem={renderItem}
                         keyExtractor={item => item.id}
                         contentContainerStyle={styles.container}
@@ -145,7 +199,8 @@ const Show = ({ route, navigation }) => {
             </View>
         </Container>
     );
-}
+};
+
 
 export default Show;
 
@@ -218,13 +273,29 @@ const styles = StyleSheet.create({
         marginTop: 5
     },
     detailButtonText: {
-        fontFamily: Font.font.regular,
+        fontFamily: Font.font.semibold,
         fontSize: 15,
-        color: '#0641CD',
+        color: 'white',
         marginTop: 5
     },
     detailButton:{
+        backgroundColor: '#0641CD',
+        padding: 10,
+        borderRadius: 5,
         justifyContent:"center",
-        alignItems:"center"
+        alignItems:"center",
+        marginTop: 5,
+    },
+    deleteButton: {
+        backgroundColor: '#ff4d4d',
+        padding: 10,
+        borderRadius: 5,
+        alignItems: 'center',
+        marginTop: 5,
+    },
+    deleteButtonText: {
+        color: 'white',
+        fontFamily: Font.font.semibold,
+        fontSize: 14,
     }
 });

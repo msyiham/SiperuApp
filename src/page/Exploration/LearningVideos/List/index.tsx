@@ -43,7 +43,7 @@ const List = ({navigation}) => {
           <TouchableOpacity
             key={index}
             onPress={() => navigation.navigate("VideoPlayer", { item })}
-            style={[styles.buttonCard, { width: windowWidth * 0.8, height: windowHeight * 0.2 }]}
+            style={[styles.buttonCard, { width: windowWidth * 0.8, height: windowHeight * 0.2, marginBottom:windowHeight*0.15 }]}
           >
             <Image 
                 source={{ uri: `https://img.youtube.com/vi/${item.id}/0.jpg` }} 

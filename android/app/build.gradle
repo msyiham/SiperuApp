@@ -130,6 +130,7 @@ dependencies {
     implementation "com.facebook.react:react-native:+"  // From node_modules
 
     // Add these lines
+    implementation project(':react-native-sound')
     implementation project(':gvr_common')
     implementation project(':arcore_client')
     implementation project(path: ':react_viro')
