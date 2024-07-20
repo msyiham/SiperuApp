@@ -42,7 +42,7 @@ const Home = ({user, navigation, onUpdate}) => {
   const exercises = [user.exercise1, user.exercise2, user.exercise3];
   const totalExercises = exercises.filter(exercise => exercise !== 0).length;
   const totalPoints = exercises.reduce((total, exercise) => total + exercise, 0);
-  const averageProgress = totalPoints / (totalExercises * 10); // Assuming the maximum point for each exercise is 10
+  const averageProgress = totalExercises > 0 ? totalPoints / (totalExercises * 10) : 0; // Assuming the maximum point for each exercise is 10
   const averageTotal = Math.round(averageProgress * 100);
 
   console.log(user.deviceRegistered)
@@ -70,14 +70,14 @@ const Home = ({user, navigation, onUpdate}) => {
             <Text style={{color:'black', fontFamily:Font.font.semibold, fontSize:13}}>Siswa {user.school} Kelas {user.grade}</Text>
             {averageTotal !== 0 && (
               <>
-              <Text style={{color:'black', fontFamily:Font.font.semibold, fontSize:13, marginTop:10}}>
-                Nilai rata-rata Anda {averageTotal}%
-              </Text>
-              <TouchableOpacity onPress={goToAchievement}>
-                <Text style={{color:'gray', fontFamily:Font.font.regular, fontSize:13, marginTop:3}}>
-                  Lihat Capaian
+                <Text style={{color:'black', fontFamily:Font.font.semibold, fontSize:13, marginTop:10}}>
+                  Nilai rata-rata Anda {averageTotal}%
                 </Text>
-              </TouchableOpacity>
+                <TouchableOpacity onPress={goToAchievement}>
+                  <Text style={{color:'gray', fontFamily:Font.font.regular, fontSize:13, marginTop:3}}>
+                    Lihat Capaian
+                  </Text>
+                </TouchableOpacity>
               </>
             )}
           </View>

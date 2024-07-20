@@ -16,7 +16,7 @@ const Achievement = ({route}) => {
     const averageProgress = totalPoints / (totalExercises * 10); // Assuming the maximum point for each exercise is 10
     // Calculate percentage of exercises completed
     const exercisesCompleted = [user.exercise1, user.exercise2, user.exercise3].filter(ex => ex > 0).length;
-    const exercisesCompletedProgress = exercisesCompleted / totalExercises;
+    const exercisesCompletedProgress = exercisesCompleted / 3;
 
     // State for animated progress
     const [animatedAverageProgress, setAnimatedAverageProgress] = useState(0);

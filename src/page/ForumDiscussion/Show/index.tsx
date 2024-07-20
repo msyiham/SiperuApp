@@ -1,93 +1,117 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, StyleSheet, TextInput, TouchableOpacity, Dimensions, Alert } from 'react-native';
+import { View, Text, FlatList, StyleSheet, TextInput, TouchableOpacity, Dimensions, Alert, RefreshControl } from 'react-native';
 import { FIRESTORE_DB } from '../../../hooks/firebase';
-import { collection, doc, getDoc, getDocs, addDoc, onSnapshot, deleteDoc } from 'firebase/firestore';
-import Icon from 'react-native-vector-icons/Ionicons';
+import { collection, doc, getDoc, getDocs, addDoc, orderBy, startAfter, limit, deleteDoc, query } from 'firebase/firestore';
 import FontAwesome from 'react-native-vector-icons/FontAwesome5';
 import Container from '../../../components/Container';
 import Header from '../../../components/Header';
 import Font from '../../../assets/fonts/font';
+
+
 
 const Show = ({ route, navigation }) => {
     const { user } = route.params;
     const windowWidth = Dimensions.get('window').width;
     const windowHeight = Dimensions.get('window').height;
     const [posts, setPosts] = useState([]);
+    const [lastVisible, setLastVisible] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [refreshing, setRefreshing] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const firestore = FIRESTORE_DB;
 
     useEffect(() => {
-        const unsubscribePosts = onSnapshot(collection(firestore, 'posts'), async (querySnapshot) => {
+        fetchPosts();
+    }, []);
+
+    const fetchPosts = async (refresh = false) => {
+        if (loading) return;
+        setLoading(true);
+
+        try {
+            let postsQuery;
+            if (lastVisible && !refresh) {
+                postsQuery = query(
+                    collection(firestore, 'posts'),
+                    orderBy('timestamp', 'desc'),
+                    startAfter(lastVisible),
+                    limit(3)
+                );
+            } else {
+                postsQuery = query(
+                    collection(firestore, 'posts'),
+                    orderBy('timestamp', 'desc'),
+                    limit(3)
+                );
+            }
+            const querySnapshot = await getDocs(postsQuery);
+
+            if (querySnapshot.empty) {
+                setLoading(false);
+                return;
+            }
+
             const postsData = await Promise.all(querySnapshot.docs.map(async docSnapshot => {
                 const postData = docSnapshot.data();
                 const userDoc = await getDoc(doc(firestore, 'users', postData.userId));
                 const username = userDoc.exists() ? userDoc.data().fullName : 'Unknown User';
                 const school = userDoc.exists() ? userDoc.data().school : 'Unknown School';
-                const grade = userDoc.exists() ? userDoc.data().grade : 'Unknown School';
-            
+                const grade = userDoc.exists() ? userDoc.data().grade : 'Unknown Grade';
+
                 const likesSnapshot = await getDocs(collection(firestore, 'posts', docSnapshot.id, 'likes'));
                 const likeCount = likesSnapshot.size;
-            
+
                 const commentsSnapshot = await getDocs(collection(firestore, 'posts', docSnapshot.id, 'comments'));
                 const commentCount = commentsSnapshot.size;
-            
-                const userLikeSnapshot = await getDocs(collection(firestore, 'posts', docSnapshot.id, 'likes'));
-                const userLiked = userLikeSnapshot.docs.some(doc => doc.data().userId === user.uid);
 
-                // Add listeners for subcollections
-                const unsubscribeComments = onSnapshot(collection(firestore, 'posts', docSnapshot.id, 'comments'), (commentsSnapshot) => {
-                    const updatedCommentCount = commentsSnapshot.size;
-                    setPosts(prevPosts => prevPosts.map(post => post.id === docSnapshot.id ? { ...post, commentCount: updatedCommentCount } : post));
-                });
-
-                const unsubscribeLikes = onSnapshot(collection(firestore, 'posts', docSnapshot.id, 'likes'), (likesSnapshot) => {
-                    const updatedLikeCount = likesSnapshot.size;
-                    const updatedUserLiked = likesSnapshot.docs.some(doc => doc.data().userId === user.uid);
-                    setPosts(prevPosts => prevPosts.map(post => post.id === docSnapshot.id ? { ...post, likeCount: updatedLikeCount, userLiked: updatedUserLiked } : post));
-                });
+                const userLiked = likesSnapshot.docs.some(doc => doc.data().userId === user.uid);
 
                 return {
                     id: docSnapshot.id,
                     ...postData,
-                    username: username,
-                    school: school,
-                    grade: grade,
-                    likeCount: likeCount,
-                    commentCount: commentCount,
-                    userLiked: userLiked,
-                    unsubscribeComments: unsubscribeComments,
-                    unsubscribeLikes: unsubscribeLikes
+                    username,
+                    school,
+                    grade,
+                    likeCount,
+                    commentCount,
+                    userLiked
                 };
             }));
-            
-            // Urutkan postsData berdasarkan timestamp
-            postsData.sort((a, b) => b.timestamp - a.timestamp);
-            
-            setPosts(postsData);
-        }, (error) => {
-            console.error("Error fetching posts: ", error);
-        });
 
-        // Cleanup listeners on unmount
-        return () => {
-            unsubscribePosts();
-            posts.forEach(post => {
-                if (post.unsubscribeComments) post.unsubscribeComments();
-                if (post.unsubscribeLikes) post.unsubscribeLikes();
-            });
-        };
-    }, [firestore, user.uid, posts]);
+            //console.log("Posts Data: ", postsData);
+
+            if (refresh) {
+                setPosts(postsData);
+            } else {
+                setPosts(prevPosts => [...prevPosts, ...postsData]);
+            }
+
+            setLastVisible(querySnapshot.docs[querySnapshot.docs.length - 1]);
+            //console.log("Last Visible: ", querySnapshot.docs[querySnapshot.docs.length - 1]);
+        } catch (error) {
+            console.error("Error fetching posts: ", error);
+        } finally {
+            setLoading(false);
+            if (refresh) setRefreshing(false);
+        }
+    };
+
+    const onRefresh = () => {
+        setRefreshing(true);
+        setLastVisible(null);
+        fetchPosts(true);
+    };
 
     const createLike = async (postId, userId) => {
         try {
             await addDoc(collection(firestore, 'posts', postId, 'likes'), {
                 userId: userId,
             });
-            console.log('Like added!');
         } catch (error) {
             console.error("Error adding like: ", error);
         }
     };
+
     const deletePost = async (postId) => {
         Alert.alert(
             'Konfirmasi',
@@ -102,7 +126,6 @@ const Show = ({ route, navigation }) => {
                     onPress: async () => {
                         try {
                             await deleteDoc(doc(firestore, 'posts', postId));
-                            console.log('Post deleted!');
                         } catch (error) {
                             console.error("Error deleting post: ", error);
                         }
@@ -114,8 +137,8 @@ const Show = ({ route, navigation }) => {
     };
 
     const renderItem = ({ item }) => {
-            const isUserPost = item.userId === user.uid;
-    
+        const isUserPost = item.userId === user.uid;
+
         return (
             <View style={[styles.postContainer, { width: windowWidth * 0.9 }]}>
                 <Text style={styles.postUsername}>{isUserPost ? "Dibuat oleh Anda" : item.username}</Text>
@@ -161,7 +184,6 @@ const Show = ({ route, navigation }) => {
             </View>
         );
     };
-    
 
     const filteredPosts = posts.filter(post =>
         post.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -184,22 +206,32 @@ const Show = ({ route, navigation }) => {
                     />
                 </View>
                 <TouchableOpacity onPress={() => navigation.navigate('CreateDiscuss', { user: user })} style={[styles.buttonCreate, { width: windowWidth * 0.4, height: windowHeight * 0.05 }]}>
-                    <Text style={styles.buttonText}>Buat  <Icon name="chatbox" size={15} color="black" /></Text>
+                    <Text style={styles.buttonText}>Buat  <FontAwesome name="comment-alt" solid size={15} color="black" /></Text>
                 </TouchableOpacity>
             </View>
             <View style={{ flex: 1 }}>
-                <View>
-                    <FlatList
-                        data={filteredPosts}
-                        renderItem={renderItem}
-                        keyExtractor={item => item.id}
-                        contentContainerStyle={styles.container}
-                    />
-                </View>
+                <FlatList
+                    data={filteredPosts}
+                    renderItem={renderItem}
+                    keyExtractor={item => item.id}
+                    contentContainerStyle={styles.container}
+                    onEndReached={() => fetchPosts()}
+                    onEndReachedThreshold={0.5}
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={refreshing}
+                            onRefresh={onRefresh}
+                        />
+                    }
+                />
             </View>
         </Container>
     );
 };
+
+
+export default Show;
+
 
 
 export default Show;
