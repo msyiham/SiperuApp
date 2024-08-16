@@ -100,7 +100,7 @@ const Account = ({user, navigation, onUpdate }) => {
           <TouchableOpacity onPress={()=>navigation.navigate('UserGuide')} style={[styles.button, {width:windowWidth*0.9, height:windowHeight*0.07, borderRadius:windowWidth*0.03}]}>
             <Text style={styles.buttonText}>Petunjuk Penggunaan</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={[styles.button, {width:windowWidth*0.9, height:windowHeight*0.07, borderRadius:windowWidth*0.03}]}>
+          <TouchableOpacity onPress={()=>navigation.navigate('Download')} style={[styles.button, {width:windowWidth*0.9, height:windowHeight*0.07, borderRadius:windowWidth*0.03}]}>
             <Text style={styles.buttonText}>Unduhan</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={()=>navigation.navigate("Contact")} style={[styles.button, {width:windowWidth*0.9, height:windowHeight*0.07, borderRadius:windowWidth*0.03}]}>

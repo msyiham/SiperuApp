@@ -15,7 +15,6 @@
     "@react-navigation/native": "^6.1.17",
     "@react-navigation/native-stack": "^6.9.26",
     "@reactvision/react-viro": "^2.41.6",
-    "@types/rn-fetch-blob": "^1.2.7",
     "firebase": "^10.12.2",
     "react": "18.2.0",
     "react-native": "0.74.2",
@@ -33,7 +32,8 @@
     "react-native-thumbnail-video": "^0.1.2",
     "react-native-vector-icons": "^10.1.0",
     "react-native-webview": "^13.10.4",
-    "react-native-youtube-iframe": "^2.3.0"
+    "react-native-youtube-iframe": "^2.3.0",
+    "rn-fetch-blob": "^0.12.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

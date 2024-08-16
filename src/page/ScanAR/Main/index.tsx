@@ -27,47 +27,11 @@ const Main = ({navigation, route}) => {
                     <TouchableOpacity onPress={()=>navigation.navigate('Natrium')} style={[styles.button, {width:windowWidth*0.9, height:windowHeight*0.07, borderRadius:windowWidth*0.03}]}>
                         <Text style={styles.buttonText}>Natrium</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={[styles.button, {width:windowWidth*0.9, height:windowHeight*0.07, borderRadius:windowWidth*0.03}]}>
-                        <Text style={styles.buttonText}>Kalium</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity  style={[styles.button, {width:windowWidth*0.9, height:windowHeight*0.07, borderRadius:windowWidth*0.03}]}>
-                        <Text style={styles.buttonText}>Rubidium</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity  style={[styles.button, {width:windowWidth*0.9, height:windowHeight*0.07, borderRadius:windowWidth*0.03}]}>
-                        <Text style={styles.buttonText}>Sesium</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={[styles.button, {width:windowWidth*0.9, height:windowHeight*0.07, borderRadius:windowWidth*0.03}]}>
-                        <Text style={styles.buttonText}>Fransium</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity  style={[styles.button, {width:windowWidth*0.9, height:windowHeight*0.07, borderRadius:windowWidth*0.03}]}>
-                        <Text style={styles.buttonText}>Berilium</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity  style={[styles.button, {width:windowWidth*0.9, height:windowHeight*0.07, borderRadius:windowWidth*0.03}]}>
-                        <Text style={styles.buttonText}>Magnesium</Text>
-                    </TouchableOpacity>
                     <TouchableOpacity onPress={()=>navigation.navigate('Calcium')}  style={[styles.button, {width:windowWidth*0.9, height:windowHeight*0.07, borderRadius:windowWidth*0.03}]}>
                         <Text style={styles.buttonText}>Kalsium</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity  style={[styles.button, {width:windowWidth*0.9, height:windowHeight*0.07, borderRadius:windowWidth*0.03}]}>
-                        <Text style={styles.buttonText}>Stronsium</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity  style={[styles.button, {width:windowWidth*0.9, height:windowHeight*0.07, borderRadius:windowWidth*0.03}]}>
-                        <Text style={styles.buttonText}>Radium</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity  style={[styles.button, {width:windowWidth*0.9, height:windowHeight*0.07, borderRadius:windowWidth*0.03}]}>
-                        <Text style={styles.buttonText}>Boron</Text>
-                    </TouchableOpacity>
                     <TouchableOpacity onPress={()=>navigation.navigate('Aluminium')}  style={[styles.button, {width:windowWidth*0.9, height:windowHeight*0.07, borderRadius:windowWidth*0.03}]}>
                         <Text style={styles.buttonText}>Aluminium</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity  style={[styles.button, {width:windowWidth*0.9, height:windowHeight*0.07, borderRadius:windowWidth*0.03}]}>
-                        <Text style={styles.buttonText}>Galium</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity  style={[styles.button, {width:windowWidth*0.9, height:windowHeight*0.07, borderRadius:windowWidth*0.03}]}>
-                        <Text style={styles.buttonText}>Indium</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={[styles.button, {width:windowWidth*0.9, height:windowHeight*0.07, borderRadius:windowWidth*0.03}]}>
-                        <Text style={styles.buttonText}>Talium</Text>
                     </TouchableOpacity>
                 </View>
             </View>

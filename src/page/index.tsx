@@ -13,4 +13,5 @@ import * as ForumDiscussion from "./ForumDiscussion";
 import LockPremium from "./LockPremium";
 import Achievement from "./Achievement";
 import * as AccountMenu from "./AccountMenu"
-export { Achievement, LockPremium, SplashScreen, Home, Auth, ScanAR, Account, Games, UnsurPage, EditProfile, AI, Exploration, StudyStyleTest, ForumDiscussion, AccountMenu }
+import Download from "./Download";
+export { Achievement, LockPremium, SplashScreen, Home, Auth, ScanAR, Account, Games, UnsurPage, EditProfile, AI, Exploration, StudyStyleTest, ForumDiscussion, AccountMenu, Download }

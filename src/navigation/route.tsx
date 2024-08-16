@@ -120,6 +120,7 @@ const Navigation = () => {
 
         {/* Account Menu */}
         <Stack.Screen name="UserGuide" component={Page.AccountMenu.UserGuide} />
+        <Stack.Screen name="Download" component={Page.Download} />
         <Stack.Screen name="TermConditions" component={Page.AccountMenu.TermConditions} />
         <Stack.Screen name="Contact" component={Page.AccountMenu.Contact} />
 
